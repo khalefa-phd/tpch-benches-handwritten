@@ -1,4 +1,5 @@
 #include <cstring>
+#include <string>
 
 #define CUSTOMERS_PER_SF 150000
 #define ORDERS_PER_SF 1500000
@@ -6,22 +7,22 @@
 #define PARTS_PER_SF 200000
 
 typedef enum {
-    L_ORDERKEY = 0,
-    L_PARTKEY,
-    L_SUPPKEY,
-    L_LINENUMBER,
-    L_QUANTITY,
-    L_EXTENDEDPRICE,
-    L_DISCOUNT,
-    L_TAX,
-    L_RETURNFLAG,
-    L_LINESTATUS,
-    L_SHIPDATE,
-    L_COMMITDATE,
-    L_RECEIPTDATE,
-    L_SHIPINSTRUCT,
-    L_SHIPMODE,
-    L_COMMENT,
+  L_ORDERKEY = 0,
+  L_PARTKEY,
+  L_SUPPKEY,
+  L_LINENUMBER,
+  L_QUANTITY,
+  L_EXTENDEDPRICE,
+  L_DISCOUNT,
+  L_TAX,
+  L_RETURNFLAG,
+  L_LINESTATUS,
+  L_SHIPDATE,
+  L_COMMITDATE,
+  L_RECEIPTDATE,
+  L_SHIPINSTRUCT,
+  L_SHIPMODE,
+  L_COMMENT,
 } LineitemKeyNames;
 
 typedef enum {
@@ -38,24 +39,24 @@ typedef enum {
 
 // Sorted by orderkey.
 struct Lineitem {
-  int* orderkey;
-  int* quantity;
-  int* partkey;
-  double* extendedprice;
-  double* discount;
-  double* tax;
-  int* commitdate;
-  int* shipdate;
-  int* recieptdate;
-  int* shipinstruct;
-  int* shipmode;
-  int* returnflag;
-  int* linestatus;
+  int *orderkey;
+  int *quantity;
+  int *partkey;
+  double *extendedprice;
+  double *discount;
+  double *tax;
+  int *commitdate;
+  int *shipdate;
+  int *recieptdate;
+  int *shipinstruct;
+  int *shipmode;
+  int *returnflag;
+  int *linestatus;
 
   // Index in the order table
-  int* orderindex;
-  //Index in the part table
-  int* partindex;
+  int *orderindex;
+  // Index in the part table
+  int *partindex;
 
   Lineitem(int n) {
     orderkey = new int[n];
@@ -98,15 +99,15 @@ struct Lineitem {
 
 // Sorted by orderkey.
 struct Order {
-  int* orderkey;
-  int* custkey;
-  int* orderdate;
-  int* orderpriority;
-  int* shippriority;
+  int *orderkey;
+  int *custkey;
+  int *orderdate;
+  int *orderpriority;
+  int *shippriority;
 
   // For Q3
-  int* li_start;
-  int* li_end;
+  int *li_start;
+  int *li_end;
 
   Order(int n) {
     orderkey = new int[n];
@@ -132,11 +133,11 @@ struct Order {
 };
 
 struct Part {
-  int* partkey;
-  int* brand;
-  int* size;
-  int* container;
-  int* promo_str;
+  int *partkey;
+  int *brand;
+  int *size;
+  int *container;
+  int *promo_str;
 
   Part(int n) {
     partkey = new int[n];
@@ -157,15 +158,11 @@ struct Part {
 
 // Here index + 1 is the order key.
 struct Customer {
-  int* mktsegment;
+  int *mktsegment;
 
-  Customer(int n) {
-    mktsegment = new int[n];
-  }
+  Customer(int n) { mktsegment = new int[n]; }
 
-  ~Customer() {
-    delete mktsegment;
-  }
+  ~Customer() { delete mktsegment; }
 };
 
 /** Sets SF from the command line parameters.
@@ -176,7 +173,7 @@ struct Customer {
  *
  * @return true if successful else false
  */
-bool load_sf(int argc, char** argv, int& SF);
+bool load_sf(int argc, char **argv, int &sf, std::string &dir);
 
 /** Uses binary search to return index of element in array.
  *
@@ -187,7 +184,7 @@ bool load_sf(int argc, char** argv, int& SF);
  * @return integer representing index of element in array. returns
  * -1 if element not found.
  */
-int binary_search(int* arr, int len, int e);
+int binary_search(int *arr, int len, int e);
 
 /** Parse a date formated as YYYY-MM-DD into an integer, maintaining
  * sort order. Exits on failure.
@@ -198,7 +195,7 @@ int binary_search(int* arr, int len, int e);
  * ordering (i.e. earlier dates have smaller values).
  *
  */
-int parse_date(const char* d);
+int parse_date(const char *d);
 
 /** Loads orders file.
  * If orders file is partitioned into many parts, each part can be loaded
@@ -212,7 +209,8 @@ int parse_date(const char* d);
  * @param sf scale factor
  *
  */
-void load_orders(Order* orders, FILE* tbl, int partition, int num_parts, int sf);
+void load_orders(Order *orders, FILE *tbl, int partition, int num_parts,
+                 int sf);
 
 /** Loads customers file.
  * If customers file is partitioned into many parts, each part can be loaded
@@ -226,7 +224,8 @@ void load_orders(Order* orders, FILE* tbl, int partition, int num_parts, int sf)
  * @param sf scale factor
  *
  */
-void load_customers(Customer* customers, FILE* tbl, int partition, int num_parts, int sf);
+void load_customers(Customer *customers, FILE *tbl, int partition,
+                    int num_parts, int sf);
 
 /** Loads lineitems file.
  * If lineitems file is partitioned into many parts, each part can be loaded
@@ -237,7 +236,7 @@ void load_customers(Customer* customers, FILE* tbl, int partition, int num_parts
  * @param offset offset into the lineitems array
  *
  */
-int load_lineitems(Lineitem* lineitems, FILE* tbl, int offset);
+int load_lineitems(Lineitem *lineitems, FILE *tbl, int offset);
 
 /** Loads the parts file
  *  If parts file is partitioned into many parts, each part can be loaded
@@ -246,6 +245,4 @@ int load_lineitems(Lineitem* lineitems, FILE* tbl, int offset);
  * @param tbl file pointer to table
  * @param offset offset into the parts array
  */
-void load_parts(Part* parts, FILE* tbl, int offset);
-
-
+void load_parts(Part *parts, FILE *tbl, int offset);

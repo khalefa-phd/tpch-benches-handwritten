@@ -1,7 +1,7 @@
 UNAME_S := $(shell uname -s)
 
 CC=gcc
-CXX=g++-6 -std=c++11 -fopenmp
+CXX=g++ -std=c++11 -fopenmp
 
 ifeq ($(UNAME_S),Darwin)
     COPENMP=clang-omp++ -liomp5 -fopenmp
@@ -18,7 +18,7 @@ FLAGS=-Werror -mavx -march=native -O3 -std=c99 -D_BSD_SOURCE -D_GNU_SOURCE
 
 .PHONY: all q1 q6 stream clean
 
-all: q14
+all: q14 q3 q1  q12-serial q12 q14 q19 q3-serial q3v1
 
 utilold.o: utilold.cpp
 	${CXX} -O3 -c utilold.cpp -o utilold.o
@@ -37,6 +37,12 @@ q3.o: q3.cpp
 
 q3: q3.o utils.o
 	${COPENMP} -O3 q3.o utils.o -o q3
+
+q3v1.o: q3-v1.cpp
+	${COPENMP} -O3 -c q3-v1.cpp -o q3v1.o
+
+q3v1: q3v1.o utils.o
+	${COPENMP} -O3 q3v1.o utils.o -o q3v1
 
 q1.o: q1.cpp
 	${COPENMP} -O3 -march=native -c q1.cpp -o q1.o
@@ -78,5 +84,4 @@ stream:
 	${CC} ${FLAGS} stream.c -o ${EXEC_STREAM} `pkg-config --libs libbsd`
 
 clean:
-	rm -f ${EXEC_Q1} ${EXEC_Q6} ${EXEC_STREAM} q3 q12 q14 q19 *.o 
-
+	rm -f ${EXEC_Q1} ${EXEC_Q6} ${EXEC_STREAM} q3 q12 q14 q19  q3-serial q3-1v *.o
